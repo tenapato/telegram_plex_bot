@@ -45,17 +45,40 @@ export async function handleFetch(event){
 }
 
 
+
+async function parseWebhook(request){
+	const  body  = await request.json();
+    console.log(body.event);
+	// let payload = JSON.parse(body.payload)
+	
+    switch (body.event) {
+        case 'library.new':
+            let title = body.Metadata.title;
+            await sendText(title + ' was recently added to the library!')
+            break;
+    
+        default:
+            break;
+    }
+
+	// return payload;
+
+}
+
+
+
 export async function hanldeSendMessage(event){
     try{
-        console.log(JSON.stringify(event));
-        await sendText('New Movie Added!');
+        //console.log(JSON.stringify(event));
+        // await sendText('New Movie Added!');
         
         // var payload = JSON.parse(req.body.payload);
         // console.log('Got webhook for', payload.event);
+	    const response = await parseWebhook(event)
 
         return new Response(JSON.stringify({
             status: 200,
-            message: 'Ok',}), {
+            message: 'Ok'}), {
         status: 200,
         headers: {
             'Access-Control-Allow-Origin': '*',
